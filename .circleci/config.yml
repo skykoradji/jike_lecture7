@@ -1,0 +1,109 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+jobs:
+  develop:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:9-stretch-browsers
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      # Download and cache dependencies
+      # https://circleci.com/docs/2.0/caching/
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run:
+          name: Install Now
+          command: sudo npm install --global --unsafe-perm now
+
+      - save_cache:
+          paths:
+            - node_modules
+          # The caches created via the save_cache step are stored for up to 30 days.
+          key: v1-dependencies-{{ checksum "package.json" }}
+        
+      # install packages!
+      - run:
+          name: Install packages
+          command: sudo npm install
+
+      # build packages!
+      - run:
+          name: Build packages
+          command: sudo npm run build
+
+      - run:
+          name: Deploy develop env to Now.sh
+          command: |
+            sudo cp .now/develop.json build/now.json && cd build && now --public --token=$NOW_TOKEN && now --token=$NOW_TOKEN alias
+
+  test:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:9-stretch-browsers
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run:
+          name: Install Now
+          command: sudo npm install --global --unsafe-perm now
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+        
+      # install packages!
+      - run:
+          name: Install packages
+          command: sudo npm install
+
+      # build packages!
+      - run:
+          name: Build packages
+          command: sudo npm run build
+
+      - run:
+          name: Deploy develop env to Now.sh
+          command: |
+            sudo cp .now/test.json build/now.json && cd build && now --public --token=$NOW_TOKEN && now --token=$NOW_TOKEN alias
+
+  
+
+workflows:
+  version: 2
+  build-deploy-develop:
+    jobs:
+      - develop:
+          filters:
+            branches:
+              only: /^develop$/
+
+
+  build-deploy-test:
+    jobs:
+      - test:
+          filters:
+            branches:
+              only: /^test$/
+
+ 
