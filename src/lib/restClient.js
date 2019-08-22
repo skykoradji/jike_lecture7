@@ -8,12 +8,16 @@ const restClient = () => {
   // Set the AUTH token for any request
   instance.interceptors.request.use(axiosConfig => {
     const current = axiosConfig;
+    const { url, method } = current;
+    // course form and profile form are using form post not the json
+    const isCourseForm =
+      url.indexOf('courses') === 0 &&
+      (method.toUpperCase() === 'POST' || method.toUpperCase() === 'PUT');
 
-    if (
-      axiosConfig.url.indexOf('courses') === 0 &&
-      (axiosConfig.method.toUpperCase() === 'POST' || axiosConfig.method.toUpperCase() === 'PUT')
-    ) {
-      // hack for the form-data upload, ugly backend api force this to be here.
+    const isProfileForm = url.indexOf('userprofile') === 0 && method.toUpperCase() === 'PUT';
+
+    if (isCourseForm || isProfileForm) {
+      // hack for the form-data upload
       current.headers['Content-Type'] = 'application/x-www-form-urlencoded';
       current.headers.Accept = '*/*';
       axiosConfig.transformRequest = data => {
