@@ -15,7 +15,9 @@ const styles = {
   }
 };
 
-function Home({ classes, history }) {
+function Home(props) {
+  console.log(props);
+  const { classes, history } = props;
   return (
     <div>
       <Typography className={classes.headline} variant="h4" component="h4">

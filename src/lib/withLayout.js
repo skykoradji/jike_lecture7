@@ -36,10 +36,10 @@ const mapStateToProps = state => {
   };
 };
 
-function withRoot(Component) {
+function withLayout(Component) {
   function App(props) {
-    const { auth } = props;
-    if (auth) {
+    const { requireAuth } = props;
+    if (requireAuth) {
       if (!props.authentication.isLoggedIn) {
         window.location.href = '/login';
         return null;
@@ -73,4 +73,4 @@ function withRoot(Component) {
   )(App);
 }
 
-export default withRoot;
+export default withLayout;

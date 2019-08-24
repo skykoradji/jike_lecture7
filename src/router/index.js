@@ -17,7 +17,7 @@ import configureStore from '../lib/redux';
 const { store, persistor } = configureStore();
 
 const ProtectedRoute = ({ component: Component, ...rest }) => (
-  <Route {...rest} render={props => <Component {...props} auth={true} />} />
+  <Route {...rest} render={props => <Component {...props} requireAuth={true} />} />
 );
 
 const AppRouter = () => (
@@ -26,8 +26,8 @@ const AppRouter = () => (
       <BrowserRouter>
         <div>
           <Switch>
-            <Route path="/" component={Home} exact={true} />
-            <ProtectedRoute path="/create-a-course" component={CreateCourse} exact={true} />
+            <Route path="/" component={Home} exact />
+            <ProtectedRoute path="/create-a-course" component={CreateCourse} exact />
             <ProtectedRoute path="/subscriptions" component={SubscriptionCourses} exact={true} />
             <Route path="/courses/:id/edit" component={EditCourse} />
             <Route path="/courses/:id" component={CourseDetail} />

@@ -1,4 +1,4 @@
-import { AUTHENTICATE, DEAUTHENTICATE } from '../types';
+import { AUTHENTICATE, DEAUTHENTICATE, CLEAR_USER } from '../types';
 import restClient from '../../restClient';
 
 // gets the token from the cookie and saves it in the store
@@ -17,6 +17,7 @@ const deauthenticate = () => {
       console.log(err);
     }
     dispatch({ type: DEAUTHENTICATE });
+    dispatch({ type: CLEAR_USER });
     window.location.reload();
   };
 };
