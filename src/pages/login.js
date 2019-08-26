@@ -163,4 +163,5 @@ class LoginPage extends Component {
   }
 }
 
-export default withLayout(withStyles(styles)(LoginPage));
+export const Login = withStyles(styles)(LoginPage);
+export default withLayout(Login);
