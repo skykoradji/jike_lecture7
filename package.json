@@ -71,6 +71,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "NODE_ENV=development jest",
+    "testcafe": "testcafe chrome test/testcafe/componentFixtures/example.js",
     "lint": "eslint .",
     "eject": "react-scripts eject"
   },
